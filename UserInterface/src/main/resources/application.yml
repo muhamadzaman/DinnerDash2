@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: USER-INTERFACE
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  redis:
+    host: localhost
+    password: mypassword
+    port: 6379
+    username:
+
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+
+    timeout: 18000
+
+server:
+  port: 8095
+  error:
+    whitelabel:
+      enabled: false
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true

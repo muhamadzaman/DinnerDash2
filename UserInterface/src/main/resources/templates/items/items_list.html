@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <section style="background-color: #eee;" th:fragment="item-list (items, categories)">
+            <div class="container py-5 mt-4">
+                <div th:each="item : ${items}">
+                    <div th:if="(${session.loggedInUser} and ${session.loggedInUser.role} == 'ADMIN') or ${!item.retired}">
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-md-12 col-xl-10">
+                                <div class="card shadow-0 border rounded-3">
+                                    <div class="card-body">
+                                        <div  class="row">
+                                            <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                                                <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                                    <img th:src="${item.imageUrl}" height="200" class="w-100 rounded" th:if="${item.imageUrl}" />
+                                                    <img th:src="@{/images/img.png}" height="200" class="w-100 rounded" th:unless="${item.imageUrl}" />
+                                                    <a href="/">
+                                                        <div class="hover-overlay">
+                                                            <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-6 col-xl-6 mt-2">
+                                                <h5>
+                                                    <a th:href="@{/items/{id}(id = ${item.id})}" class="text-decoration-none text-dark" th:text="${item.title}"></a>
+                                                </h5>
+                                                <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">
+                                                    <li class="list-inline-item text-muted" th:each="category : ${categories}" th:if="${item.categoryIds.contains(category.id)}" th:text="${category.name}"></li>
+                                                </ul>
+                                                <p class="text-truncate mb-4 mb-md-0" th:text="${item.description}"></p>
+                                                <div th:if="${session.loggedInUser}">
+                                                    <div th:if="${session.loggedInUser.role} == 'ADMIN'">
+                                                        <a th:href="@{/items/{id}/edit(id = ${item.id})}" class="btn btn-sm btn-warning px-4 mt-4">
+                                                            Update
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                                                <h3 class="mb-0 font-weight-semibold mt-2">Rs. <span th:text="${item.price}"></span></h3>
+                                                <div class="d-flex flex-column mt-5">
+                                                    <a th:href="@{/items/{id}(id = ${item.id})}" class="btn btn-success btn-sm" >Details</a>
+                                                    <div>
+                                                        <div th:if="${session.loggedInUser} and ${session.loggedInUser.role} == 'USER'">
+                                                            <form th:action="@{/cart/users/{id}/save(itemId = ${item.id}, id = ${session.loggedInUser.id})}" method="post">
+                                                                <button type="submit" name="submit" class="btn btn-outline-warning text-dark btn-sm mt-2 w-100">
+                                                                    Add to cart
+                                                                    <i class="fas fa-shopping-cart ms-1"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                        <div th:unless="${session.loggedInUser}">
+                                                            <form th:action="@{/session/cart(itemId = ${item.id})}" method="post">
+                                                                <button type="submit" name="submit" class="btn btn-outline-warning text-dark btn-sm mt-2 w-100">
+                                                                    Add to cart
+                                                                    <i class="fas fa-shopping-cart ms-1"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

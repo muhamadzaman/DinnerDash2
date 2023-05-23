@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments :: header"></head>
+    <body>
+        <div th:replace="fragments :: navbar"></div>
+        <div class="container mt-5">
+            <h3 th:text="${restaurant.name}"></h3>
+            <p class="fw-light" th:text="${restaurant.address}"></p>
+            <div th:if="${session.loggedInUser}">
+                <div th:if="${session.loggedInUser.role} == 'ADMIN'">
+                    <a th:href="@{/restaurants/{id}/categories/new((id = ${restaurant.id}))}" class="btn btn-sm btn-success px-4">
+                        Create New Category
+                    </a>
+                </div>
+            </div>
+            <ul class="category-list">
+                <li class="m-3">
+                    <a href="" class="px-3 py-1 text-decoration-none btn btn-outline-dark">All</a>
+                </li>
+                <li class="m-3">
+                    <a th:href="@{/restaurants/{id}/famous-item (id = ${restaurant.id})}" class="px-3 py-1 text-decoration-none btn btn-outline-dark">Customer Favourite</a>
+                </li>
+                <li th:each="category: ${restaurant.categories}" class="m-3">
+                    <a th:href="@{/categories/{id}/items(id = ${category.id})}" class="px-3 py-1 text-decoration-none btn btn-outline-dark" th:text="${category.name}"></a>
+                </li>
+            </ul>
+            <div>
+                <h3 class="mt-4 mb-2 d-flex justify-content-center"><strong>Items</strong></h3>
+                <div>
+                    <div th:unless="${category}">
+                        <span class="mt-4 mb-5 d-flex justify-content-center">Category: (<p >All</p>)</span>
+                    </div>
+                    <div th:if="${category}">
+                        <span class="mt-4 mb-5 d-flex justify-content-center">Category: (<p th:text="${category}"></p>)</span>
+                    </div>
+                </div>
+                <div>
+                    <div th:if="${session.loggedInUser}">
+                        <div th:if="${session.loggedInUser.role} == 'ADMIN'">
+                            <a th:href="@{/restaurants/{id}/items/new(id = ${restaurant.id})}" class="btn btn-sm btn-success">
+                                Add Item
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${items}">
+                    <section th:replace="items/items_list :: item-list (${items}, ${restaurant.categories})"></section>
+                </div>
+                <div th:unless="${items}">
+                    <section th:replace="items/items_list :: item-list (${restaurant.items}, ${restaurant.categories})"></section>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>

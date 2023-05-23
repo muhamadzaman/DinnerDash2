@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments :: header">
+  </head>
+  <body>
+    <div th:replace="fragments :: navbar"></div>
+    <section class="h-100 gradient-custom">
+      <div class="container py-5">
+        <div th:if="${errors}">
+          <div class="alert alert-danger" role="alert" th:text="${errors}">
+          </div>
+        </div>
+        <div class="row d-flex justify-content-center my-4">
+          <div class="col-md-8">
+            <div class="card mb-4">
+              <div class="card-header py-3">
+                <h5 class="mb-0">Cart</h5>
+              </div>
+              <div class="card-body" th:each="cartItem : ${cart.cartItems}">
+                <!-- Single item -->
+                <div class="row">
+                  <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                    <!-- Image -->
+                    <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                      <div>
+                        <div th:if="${cartItem.item.imageUrl}">
+                          <img th:src="${cartItem.item.imageUrl}"
+                               class="w-100 rounded" height="200px" alt="Blue Jeans Jacket" />
+                        </div>
+                        <div th:unless="${cartItem.item.imageUrl}">
+                          <img th:src="@{/images/img.png}"
+                               class="w-100" alt="Blue Jeans Jacket" />
+                        </div>
+                      </div>
+                      <a href="#!">
+                        <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                      </a>
+                    </div>
+                    <!-- Image -->
+                  </div>
+
+                  <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                    <!-- Data -->
+                    <p><strong th:text="${cartItem.item.title}">Blue denim shirt</strong></p>
+                    <p th:text="${cartItem.item.description.trim()}">Color: blue</p>
+                    <p>Size: M</p>
+                    <p class="text-danger" th:if="${cartItem.item.retired}">Retired: You can't place its order.</p>
+                    <div>
+                      <div th:if="${session.loggedInUser}">
+                        <form th:action="@{/cart/users/{userId}/items/{itemId}/remove(userId = ${session.loggedInUser.id},
+                                 itemId = ${cartItem.itemId})}" th:method="delete">
+                          <button type="submit" name="submit" class="btn btn-primary btn-sm mb-2" title="Remove Item">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </div>
+                      <div th:unless="${session.loggedInUser}">
+                        <form th:action="@{/session/cart/items/{id}/remove(id = ${cartItem.itemId})}" th:method="delete">
+                          <button type="submit" name="submit" class="btn btn-primary btn-sm mb-2" title="Remove Item">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+
+                    <a class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
+                            title="Details" th:href="@{/items/{id}(id = ${cartItem.itemId})}">
+                      <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                    <!-- Data -->
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <!-- Quantity -->
+                    <div class="d-flex mb-4" style="max-width: 300px">
+                      <div>
+                        <div th:if="${session.loggedInUser}">
+                          <form th:action="@{/cart/users/{userId}/items/{itemId}/decrement(userId = ${session.loggedInUser.id},
+                                 itemId = ${cartItem.itemId})}" th:method="put">
+                            <button type="submit" name="submit" class="btn btn-primary px-3 me-2">
+                              <i class="fas fa-minus"></i>
+                            </button>
+                          </form>
+                        </div>
+                        <div th:unless="${session.loggedInUser}">
+                          <form th:action="@{/session/cart/items/{id}/decrement(id = ${cartItem.itemId})}" th:method="put">
+                            <button type="submit" name="submit" class="btn btn-primary px-3 me-2">
+                              <i class="fas fa-minus"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                      <div th:if="${session.loggedInUser}">
+                      </div>
+
+                      <div class="form-outline">
+                        <input id="form1" min="0" name="quantity" readonly th:value="${cartItem.quantity}" type="number" class="form-control" />
+                        <label class="form-label" for="form1">Quantity</label>
+                      </div>
+                      <div>
+                        <div th:if="${session.loggedInUser}">
+                          <form th:action="@{/cart/users/{userId}/items/{itemId}/increment(userId = ${session.loggedInUser.id},
+                                 itemId = ${cartItem.itemId})}" th:method="put">
+                            <button type="submit" name="submit" class="btn btn-primary px-3 ms-2">
+                              <i class="fas fa-plus"></i>
+                            </button>
+                          </form>
+                        </div>
+                        <div th:unless="${session.loggedInUser}">
+                          <form th:action="@{/session/cart/items/{id}/increment(id = ${cartItem.itemId})}" th:method="put">
+                            <button type="submit" name="submit" class="btn btn-primary px-3 ms-2">
+                              <i class="fas fa-plus"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+
+                    </div>
+                    <!-- Quantity -->
+
+                    <!-- Price -->
+                    <p class="text-start text-md-center">
+                      Rs. <strong th:text="${cartItem.item.price}">$17.99</strong>
+                    </p>
+                    <!-- Price -->
+                  </div>
+                  <hr class="my-4" />
+                </div>
+              </div>
+            </div>
+                <!-- Single item -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <p><strong>Expected shipping delivery</strong></p>
+                <p class="mb-0">12.10.2020 - 14.10.2020</p>
+              </div>
+            </div>
+            <div class="card mb-4 mb-lg-0">
+              <div class="card-body">
+                <p><strong>We accept</strong></p>
+                <img class="me-2" width="45px"
+                     src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+                     alt="Visa" />
+                <img class="me-2" width="45px"
+                     src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
+                     alt="American Express" />
+                <img class="me-2" width="45px"
+                     src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
+                     alt="Mastercard" />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-4">
+              <div class="card-header py-3">
+                <h5 class="mb-0">Summary</h5>
+              </div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                  <li
+                          class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                    Products
+                    <span>$53.98</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                    Shipping
+                    <span>Gratis</span>
+                  </li>
+                  <li
+                          class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                    <div>
+                      <strong>Total amount</strong>
+                      <strong>
+                        <p class="mb-0">(including VAT)</p>
+                      </strong>
+                    </div>
+                    <div th:if="${price.isEmpty()}">
+                      <span>Rs. <strong>0.00</strong></span>
+                    </div>
+                    <div th:unless="${price.isEmpty()}">
+                      <span>Rs. <strong th:text="${#aggregates.sum(price)}">$53.98</strong></span>
+                    </div>
+                  </li>
+                </ul>
+                <div th:if="${#lists.size(cart.cartItems)} > 0">
+                  <a th:href="@{/checkout}" class="btn btn-primary btn-sm btn-block m-2">
+                    Go to checkout
+                  </a>
+                </div>
+                <div>
+                  <div th:if="${#lists.size(cart.cartItems)} > 0">
+                    <div th:if="${session.loggedInUser}">
+                      <form th:action="@{/cart/users/{userId}/clear(userId = ${session.loggedInUser.id})}" th:method="delete">
+                        <button type="submit" name="submit" class="btn btn-primary btn-sm px-3 m-2">
+                          Clear Cart
+                        </button>
+                      </form>
+                    </div>
+                    <div th:unless="${session.loggedInUser}">
+                      <form th:action="@{/session/cart/clear}" th:method="delete">
+                        <button type="submit" name="submit" class="btn btn-primary btn-sm px-3 m-2">
+                          Clear Cart
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

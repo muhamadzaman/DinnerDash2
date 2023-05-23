@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments :: header">
+  </head>
+  <body>
+    <div th:replace="fragments :: navbar"></div>
+    <div class="container">
+      <div class="card p-3 mt-3">
+        <h1 class="d-flex justify-content-center">Create Item</h1>
+        <div th:if="${error}" class="m-3">
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-danger" th:each="err : ${error.errors}">
+              <span th:text="${err}"></span>
+            </li>
+            <li class="list-group-item list-group-item-danger" th:if="${error.message}">
+              <span th:text="${error.message}"></span>
+            </li>
+          </ul>
+        </div>
+        <form th:action="@{/items/{id}(id = ${item.id})}" th:object="${item}" th:method="put" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="name" class="form-label">Title</label>
+            <input type="text" name="title" th:field="*{title}" class="form-control" id="name" aria-describedby="emailHelp">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" name="description" th:field="*{description}" class="form-control" id="description" aria-describedby="emailHelp">
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" name="price" th:field="*{price}" class="form-control" id="price" aria-describedby="emailHelp" th:step="0.01">
+          </div>
+          <div class="mb-3">
+            <label>Select atleast one category:</label>
+            <select class="form-select" name="categoryIds" th:field="*{categoryIds}" multiple>
+              <option th:each="category : ${categories}"
+                      th:value="${category.id}"
+                      th:text="${category.name}">
+              </option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <input type="file" name="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+          </div>
+          <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

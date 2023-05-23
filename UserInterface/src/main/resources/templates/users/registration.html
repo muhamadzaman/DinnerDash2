@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments :: header">
+    </head>
+    <body>
+        <br>
+        <br>
+        <!-- Create HTML registration form -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <!-- success message -->
+                    <div th:if="${error}" class="m-3">
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-danger" th:each="err : ${error.errors}">
+                                <span th:text="${err}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <h1>Registration</h1>
+                    <form th:action="@{/users/sign_up}" method="post" th:object="${user}">
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="firstName"> Full Name </label>
+                            <input id="firstName" class="form-control" th:field="*{fullName}"
+                                   required autofocus="autofocus" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="lastName"> Display </label> <input
+                                id="lastName" class="form-control" th:field="*{displayName}"
+                                autofocus="autofocus" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="email"> Email </label> <input
+                                id="email" class="form-control" th:field="*{email}" required
+                                autofocus="autofocus" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="password"> Password </label> <input
+                                id="password" class="form-control" type="password"
+                                th:field="*{password}" required autofocus="autofocus" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-success">Register</button>
+<!--                            <span>Already registered? <a href="/" th:href="@{/login}">Login-->
+<!--                                here</a></span>-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

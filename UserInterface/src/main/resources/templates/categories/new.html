@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="fragments :: header">
+  </head>
+  <body>
+    <div th:replace="fragments :: navbar"></div>
+    <div class="container">
+      <div th:if="${error}" class="m-3">
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-danger" th:each="err : ${error.errors}">
+            <span th:text="${err}"></span>
+          </li>
+        </ul>
+      </div>
+      <form th:action="@{/categories}" th:object="${category}" method="post">
+        <table>
+          <tr>
+            <td><label>Name</label></td>
+            <td><input type="text" th:field="*{name}" /></td>
+          </tr>
+          <tr>
+            <td><label>Restaurant</label></td>
+            <td><input type="text" th:field="*{restaurantId}" th:value="${category.restaurantId}" th:readonly="true" /></td>
+          </tr>
+          <tr>
+            <td><input type="submit" value="Submit" /></td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </body>
+</html>

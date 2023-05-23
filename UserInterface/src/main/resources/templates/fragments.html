@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="header">
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>DinnerDash 2.0</title>
+        <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/style.css}">
+        <script th:src="@{/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/jquery-3.6.0.min.js}"></script>
+        <script src="https://kit.fontawesome.com/e37c01d925.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div th:fragment="navbar">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <a class="ms-5 navbar-brand fw-bold" th:href="@{/}">DinnerDash 2.0</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse d-flex" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" th:href="@{/}">Restaurants</a>
+                            </li>
+                            <li class="nav-item" th:if="${session.loggedInUser} and ${session.loggedInUser.role} == 'USER'">
+                                <a class="nav-link" th:href="@{/orders(userId = ${session.loggedInUser.id})}">Orders</a>
+                            </li>
+                            <li class="nav-item" th:if="${session.loggedInUser} and ${session.loggedInUser.role} == 'ADMIN'">
+                                <a class="nav-link" th:href="@{/orders}">Orders</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div th:if="${session.loggedInUser} and ${session.loggedInUser.role} == 'USER'">
+                        <a class="text-light nav-link me-4" th:href="@{/users/{id}/cart(id = ${session.loggedInUser.id})}">
+                            <i class="fas fa-shopping-cart ms-1"></i>
+                        </a>
+                    </div>
+                    <div th:unless="${session.loggedInUser}">
+                        <a class="nav-link text-light border-0 me-5" th:href="@{/session/cart}">
+                            <i class="fas fa-shopping-cart ms-1"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <div th:if="${session.loggedInUser}" class="dropstart me-5">
+                            <a th:text="${session.loggedInUser.fullName.split(' ')[0]}"
+                               class="text-light nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                                <li><form th:action="@{/users/logout}" th:method="post">
+                                    <button type="submit" aria-current="page" class="dropdown-item text-dark text-decoration-none btn btn-link px-3">
+                                        Logout
+                                    </button>
+                                </form></li>
+<!--                                <li><a class="dropdown-item" href="#">Another action</a></li>-->
+<!--                                <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+                            </ul>
+                        </div>
+                        <div th:unless="${session.loggedInUser}">
+                            <a class="text-light nav-link me-5" th:href="@{/users/sign_in/new}">
+                                Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </body>
+</html>
